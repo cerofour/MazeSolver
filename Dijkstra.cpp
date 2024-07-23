@@ -3,16 +3,18 @@
 #include <vector>
 
 #include "ApplicationContext.hpp"
-#include "Graph.hpp"
 
 /*
 * Grid code adapted from:
 * https://github.com/catsocks/sdl-grid/
 */
 
+const int k_maze_width = 50;
+const int k_maze_height = 50;
+
 int main(int argc , char* argv[]) {
 
-	dijkstra::Application app{};
+	dijkstra::Application app{k_maze_width,k_maze_height,14};
 
 	app.initSDL();
 

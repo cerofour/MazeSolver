@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include <climits>
+#include <cassert>
 
 namespace dijkstra {
 
@@ -87,6 +88,19 @@ namespace dijkstra {
 
 			search_and_delete(adjacencyList[node], neighbour);
 			search_and_delete(adjacencyList[neighbour], node);
+		}
+
+		void connectNodes(int node, int neighbour) {
+			// nodes are already connected
+
+
+			if (std::find(adjacencyList[node].begin(), adjacencyList[node].end(), neighbour) != adjacencyList[node].end())
+				return;
+			if(std::find(adjacencyList[neighbour].begin(), adjacencyList[neighbour].end(), node) != adjacencyList[neighbour].end())
+				return;
+
+			adjacencyList[neighbour].push_back(node);
+			adjacencyList[node].push_back(neighbour);
 		}
 
 		std::vector<int> shortestPath(int start, int end) {
