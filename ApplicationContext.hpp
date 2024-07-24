@@ -6,6 +6,7 @@
 
 #include "Graph.hpp"
 #include "MazeGenerator.hpp"
+#include "ObstacleGenerator.hpp"
 
 namespace dijkstra {
 
@@ -45,7 +46,7 @@ namespace dijkstra {
 					SDL_GetError());
 				return false;
 			}
-			if (SDL_CreateWindowAndRenderer(window_width , window_height , 0 , &window ,
+			if (SDL_CreateWindowAndRenderer(window_width , window_height , SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED, &window ,
 				&renderer) < 0) {
 				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION ,
 					"Create window and renderer: %s" , SDL_GetError());
@@ -74,8 +75,9 @@ namespace dijkstra {
 
 				//drawCursors();
 
-				if (visualize_dijkstra)
+				if (visualize_dijkstra) {
 					drawDijkstra();
+				}
 
 				drawGhostCursor();
 
@@ -268,6 +270,9 @@ namespace dijkstra {
 			case SDLK_m:
 				generateMaze();
 				break;
+			case SDLK_o:
+				generateObstacleGrid();
+				break;
 			case SDLK_ESCAPE:
 				quit = SDL_TRUE;
 				break;
@@ -321,7 +326,6 @@ namespace dijkstra {
 			int end = dijkstra::WeightedGraph::nodeIndex(std::get<0>(target_node), std::get<1>(target_node), grid_width);
 			
 			dijkstra_solution = std::make_unique<std::vector<int>>(std::move(graph->shortestPath(start, end)));
-
 			visualize_dijkstra = true;
 		}
 
@@ -331,18 +335,37 @@ namespace dijkstra {
 			disabled_cells.clear();
 		}
 
-		void generateMaze() {
+		void resetGrid() {
 			reEnableCells();
 			if (dijkstra_solution.get())
 				dijkstra_solution->clear();
+		}
+
+		void generateMaze() {
+			resetGrid();
 
 			auto mazeGenerator = std::make_unique<MazeGenerator>(grid_width, grid_height);
 			mazeGenerator->generate();
 			mazeGenerator->printMaze();
 			const auto& mazeMatrix = mazeGenerator->mazeMatrix();
 			for (int x = 0; x < mazeMatrix.size(); x++) {
-				for (int y = 0; y < mazeMatrix.size(); y++) {
+				for (int y = 0; y < mazeMatrix[x].size(); y++) {
 					if (mazeMatrix[x][y] == 0)
+						disableCell(dijkstra::WeightedGraph::nodeIndex(y, x, grid_width));
+				}
+			}
+		}
+
+		void generateObstacleGrid() {
+			resetGrid();
+
+			auto obstacleGridGenerator = std::make_unique<ObstacleGenerator>(grid_width, grid_height, 90);
+			obstacleGridGenerator->generate();
+			obstacleGridGenerator->printMaze();
+			const auto& matrix = obstacleGridGenerator->matrix();
+			for (int x = 0; x < matrix.size(); x++) {
+				for (int y = 0; y < matrix[x].size(); y++) {
+					if (matrix[x][y] == 0)
 						disableCell(dijkstra::WeightedGraph::nodeIndex(y, x, grid_width));
 				}
 			}

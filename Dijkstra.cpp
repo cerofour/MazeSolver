@@ -9,12 +9,12 @@
 * https://github.com/catsocks/sdl-grid/
 */
 
-const int k_maze_width = 50;
+const int k_maze_width = 100;
 const int k_maze_height = 50;
 
 int main(int argc , char* argv[]) {
 
-	dijkstra::Application app{k_maze_width,k_maze_height,14};
+	dijkstra::Application app{k_maze_width,k_maze_height,10};
 
 	app.initSDL();
 

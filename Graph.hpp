@@ -4,6 +4,7 @@
 #include <queue>
 #include <climits>
 #include <cassert>
+#include <set>
 
 namespace dijkstra {
 
@@ -12,7 +13,7 @@ namespace dijkstra {
 	 */
 	class WeightedGraph {
 	public:
-		WeightedGraph(const std::vector<std::vector<int>>&& adjList)
+		WeightedGraph(std::vector<std::vector<int>>&& adjList)
 			:adjacencyList(std::move(adjList)) {
 		}
 

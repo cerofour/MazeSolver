@@ -15,7 +15,7 @@ if (POLICY CMP0141)
 endif()
 
 # Agregue un origen al ejecutable de este proyecto.
-add_executable (Dijkstra "Dijkstra.cpp" "Dijkstra.h")
+add_executable (Dijkstra "Dijkstra.cpp" "Dijkstra.h" "ApplicationContext.hpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Dijkstra PROPERTY CXX_STANDARD 20)
